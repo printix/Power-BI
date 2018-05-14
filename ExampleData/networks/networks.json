@@ -1,0 +1,9 @@
+[
+{"name": "Longton", "gateways": [{"ip": "231.126.96.168", "mac": "4e26ae7453cf"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "15a3bc03-16e9-4f20-9520-bf3df4cc3ccb"},
+{"name": "Salcombe", "gateways": [{"ip": "13.95.72.128", "mac": "f4c6443cee2e"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "49d53519-52d7-43e6-8d33-8603fc35a950"},
+{"name": "Buxton", "gateways": [{"ip": "238.211.220.32", "mac": "d9a5e6ee5769"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "a20991ff-a859-4942-92a7-63af19cdda8b"},
+{"name": "Cumbernauld", "gateways": [{"ip": "158.195.182.252", "mac": "08b7f115c7ea"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "1cc83704-bf74-4c15-95fe-e1b5d3dcb22c"},
+{"name": "Rawtenstall", "gateways": [{"ip": "66.15.231.22", "mac": "83aacf2b161f"}, {"ip": "14.115.233.88", "mac": "d136c67ce817"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "860d70e0-b973-4d45-8c63-d4a2ce3c4636"},
+{"name": "Uppingham", "gateways": [{"ip": "147.23.147.110", "mac": "2a05a3ef9fad"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "79a7686e-3534-4d77-8998-eecf4c9d75f2"},
+{"name": "Cricklade", "gateways": [{"ip": "36.232.80.16", "mac": "bd4540fe813e"}], "tenantId": "d4150d31-c29a-4b4d-bb8c-90f1033cd085", "networkId": "d02f52d8-b621-4093-9bbc-8455c77ac668"}
+]
