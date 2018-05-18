@@ -8,6 +8,9 @@ This solution contains multiple key components;
 4. A set of PowerPoint design templates and icons.
 5. A set of example data you can work with.
 
+## Demo
+A demo of the Printix solution template can be viewed [here](https://app.powerbi.com/view?r=eyJrIjoiNGZhMjJlMTMtYzgwZi00ZmRkLWExNzItZjUxMTFhNWQxM2U2IiwidCI6IjNlYWFmMWQzLTZmOWUtNDBmZC1iN2U5LTYwYjQ1ZTU1ZTEyNSIsImMiOjh9). 
+
 # Getting started
 
 ## Prerequisites
