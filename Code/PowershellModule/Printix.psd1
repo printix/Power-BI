@@ -12,7 +12,7 @@
     RootModule        = '.\Printix.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '1.0.2'
 
     # ID used to uniquely identify this module
     #GUID = ''

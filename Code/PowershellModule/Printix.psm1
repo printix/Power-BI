@@ -210,7 +210,7 @@ Function New-PrintixDataExtract {
         $ExtractStatusStartTime = get-date
 
         #Request extract
-        $ExtractRequest = Invoke-RestMethod  -Method Post -Uri $ExtractUri -Headers $HttpHeaders -Body ($Requestbody | convertto-json)  -ErrorAction:Stop
+        $ExtractRequest = Invoke-RestMethod  -Method Post -Uri $ExtractUri -Headers $Global:HttpHeaders -Body ($Requestbody | convertto-json)  -ErrorAction:Stop
 
         #Wait until extract is completed
         do {
@@ -222,17 +222,17 @@ Function New-PrintixDataExtract {
                 Set-PrintixHttpHeaders
             }
 
-            $ExtractStatus = Invoke-RestMethod  -Method Get -Uri $ExtractRequest._links.self.href -Headers $HttpHeaders
+            $ExtractStatus = Invoke-RestMethod  -Method Get -Uri $ExtractRequest._links.self.href -Headers $Global:HttpHeaders
             $ExtractstatusCounter++
 
             #Wait for some random time
             start-sleep -Seconds (Get-Random -Minimum 5 -Maximum 20)
 
         }
-        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 30)
+        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 60)
 
-        if ($ExtractstatusCounter -gt 30) {
-            Write-Warning -Message ('ExtractstatusCounter is greather than 30. Data extract might be uncomplete!' )
+        if ($ExtractstatusCounter -gt 60) {
+            Write-Warning -Message ('ExtractstatusCounter is greather than 60. Data extract might be uncomplete!' )
             $SuccessfullExtract = $false
         }
         else {
@@ -261,6 +261,9 @@ Function New-PrintixDataExtract {
         $ErrorMessage += " `n"
         $ErrorMessage += 'Uri: '
         $ErrorMessage += ('[{0}] or [{1}]' -f $ExtractRequest._links.self.href, $ExtractUri )
+        $ErrorMessage += " `n"
+        $ErrorMessage += 'Body: '
+        $ErrorMessage += ('[{0}]' -f ($Requestbody | convertto-json) )
         $ErrorMessage += " `n"
         $ErrorMessage += 'Response: '
         $ErrorMessage += $_.Exception.Response
