@@ -67,6 +67,9 @@ $VerbosePreference = 'SilentlyContinue'
 #Do not change the ErrorAction
 $ErrorActionPreference = 'stop'
 
+#Timestamp format for logs
+$Global:TimestampFormat = 'HH:mm:ss'
+
 Try {
 
     # Get the connection "AzureRunAsConnection" Service Principal Connection
@@ -80,8 +83,7 @@ Try {
                 -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
                 -ErrorAction Stop
         
-            Write-Output `
-                -InputObject 'Successfuly connected to Azure with Service Principal.'
+            Write-Output -InputObject ('{0} - Successfuly connected to Azure with Service Principal.' -f (Get-Date -format $Global:TimestampFormat))
         }
         Catch {
             $ErrorMessage = 'Login to Azure failed with Service Principal.'
@@ -94,17 +96,16 @@ Try {
     }
 
     #Azure
-    Write-output -InputObject ('Getting AutomationPSCredential [{0}].' -f $ClientCredentialsName)
+    Write-output -InputObject ('{0} - Getting AutomationPSCredential [{1}].' -f (Get-Date -format $Global:TimestampFormat), $ClientCredentialsName)
     $Global:ClientCredentials = Get-AutomationPSCredential -Name $ClientCredentialsName
     #Verify that we found the client credentials we need
     if ([string]::IsNullOrEmpty($global:ClientCredentials)) { 
-        throw ('Could not retrieve [{0}] credential. Check that you created this first in the Automation account.' -f $ClientCredentials) 
+        throw ('{0} - Could not retrieve [{1}] credential. Check that you created this first in the Automation account.' -f (Get-Date -format $Global:TimestampFormat), $ClientCredentials) 
     }
 
     #Set the Printix API entry
     $Global:ApiEntry = ('https://api.printix.net/public/partners/{0}' -f $PartnerID)
-    Write-output -InputObject ('Printix API entry [{0}].' -f $Global:ApiEntry)
-
+    Write-output -InputObject ('{0} - Printix API entry [{1}].' -f (Get-Date -format $Global:TimestampFormat), $Global:ApiEntry)
 
     #Verify that the storage accounts specified in the $StorageMapping actually exist
     $null = Get-AzureRmStorageaccount -StorageAccountName $StorageMapping.StorageAccountPrintixExtractedData -ResourceGroupName $StorageMapping.StorageAccountPrintixExtractedDataResourceGroup
@@ -112,46 +113,44 @@ Try {
         $null = Get-AzureRmStorageaccount -StorageAccountName $Tenant.StorageAccount -ResourceGroupName $tenant.ResourceGroup
     }
 
-
     #Get Printix Partner Information and all printix tenants
     $PrintixPartnerInformation = Get-PrintixPartnerInformation
-    Write-Output -InputObject ('Working on Partner account [{0}] email [{1}]' -f $PrintixPartnerInformation.name, $PrintixPartnerInformation.email)
+    Write-Output -InputObject ('{0} - Working on Partner account [{1}] email [{2}]' -f (Get-Date -format $Global:TimestampFormat), $PrintixPartnerInformation.name, $PrintixPartnerInformation.email)
 
     $PrintixTenants = (Get-PrintixPartnerTenants -TenantsHref $PrintixPartnerInformation._links.'px:tenants'.href) | Select-object -expandproperty Tenants
-    Write-Output  -InputObject ('Found [{0}] tenants' -f $PrintixTenants.count)
+    Write-Output  -InputObject ('{0} - Found [{1}] tenants' -f (Get-Date -format $Global:TimestampFormat), $PrintixTenants.count)
 
     #Only work with tenants that are specifed in the $StorageMapping object.
     $PrintixTenants = $PrintixTenants | Where-Object {$_.tenant_domain -in $StorageMapping.tenants.tenantdomain}
-    Write-Output  -InputObject ('After filtering out tenants not found in storagemapping, continuing to work on [{0}] tenants' -f $PrintixTenants.count)
+    Write-Output  -InputObject ('{0} - After filtering out tenants not found in storagemapping, continuing to work on [{1}] tenants' -f (Get-Date -format $Global:TimestampFormat), $PrintixTenants.count)
 
     #Loop through each tenant 
     Foreach ($PrintixTenant in $PrintixTenants) {
 
-        Write-Output  -InputObject ('Working on tenant [{0}] tenantdomain [{1}]' -f $PrintixTenant.tenant_name, $PrintixTenant.tenant_domain)
+        Write-Output  -InputObject ('{0} - Working on tenant [{1}] tenantdomain [{2}]' -f (Get-Date -format $Global:TimestampFormat), $PrintixTenant.tenant_name, $PrintixTenant.tenant_domain)
         $TenantInformation = Get-PrintixTenantInformation -TenantHref $PrintixTenant.'_links'.'px:dataextract'.href
 
-        Write-Output -InputObject ' Requesting data extract. This might take some time...'
+        Write-Output -InputObject ('{0} -   Requesting data extract. This might take some time...' -f (Get-Date -format $Global:TimestampFormat))
         $ExtractResults = New-PrintixDataExtract -StorageMapping $StorageMapping -DaysToExtract $DaysToExtract -ExtractUri $TenantInformation.'_links'.self.href
 
         if ($ExtractResults.SuccessfullExtract) {
 
             #Get the storage and container context for the extracted data
-            Write-Output -InputObject ('    Getting Azure Storage account [{0}] in Resource group [{1}]' -f $StorageMapping.StorageAccountPrintixExtractedData, $StorageMapping.StorageAccountPrintixExtractedDataResourceGroup) 
+            Write-Output -InputObject ('{0} -     Getting Azure Storage account [{1}] in Resource group [{2}]' -f (Get-Date -format $Global:TimestampFormat), $StorageMapping.StorageAccountPrintixExtractedData, $StorageMapping.StorageAccountPrintixExtractedDataResourceGroup) 
             $StorageAccountPrintixContext = Get-AzureRmStorageaccount -Name $StorageMapping.StorageAccountPrintixExtractedData -ResourceGroupName $StorageMapping.StorageAccountPrintixExtractedDataResourceGroup
-            Write-Output -InputObject ('    Getting Azure Storage container [{0}] ' -f $ExtractResults.ContainerName)
+            Write-Output -InputObject ('{0} -     Getting Azure Storage container [{1}] ' -f (Get-Date -format $Global:TimestampFormat), $ExtractResults.ContainerName)
             $StorageContainerPrintixExtract = Get-AzureStorageContainer -Name $ExtractResults.ContainerName -Context $StorageAccountPrintixContext.Context
 
             #Get the storage and container context for the destination data
             $TenantStorageInfo = $StorageMapping.tenants | where-object {$_.tenantdomain -eq $PrintixTenant.tenant_domain}
-            Write-Output -InputObject ('    Getting Azure Storage account [{0}] in Resource group [{1}]' -f $TenantStorageInfo.StorageAccount, $TenantStorageInfo.ResourceGroup) 
+            Write-Output -InputObject ('{0} -     Getting Azure Storage account [{1}] in Resource group [{2}]' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.StorageAccount, $TenantStorageInfo.ResourceGroup) 
             $StorageAccountTenantContext = Get-AzureRmStorageaccount -Name $TenantStorageInfo.StorageAccount -ResourceGroupName $TenantStorageInfo.ResourceGroup
-            Write-Output -InputObject ('    Getting Azure Storage container [{0}] ' -f $TenantStorageInfo.ContainerName)
+            Write-Output -InputObject ('{0} -     Getting Azure Storage container [{1}] ' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.ContainerName)
             $StorageContainerTenant = Get-AzureStorageContainer -Name $TenantStorageInfo.ContainerName -Context $StorageAccountTenantContext.Context -ErrorAction SilentlyContinue
-
 
             #If the destination container does not exist, create it
             if ([string]::IsNullOrEmpty($StorageContainerTenant)) {
-                Write-Output -InputObject ('        Azure Storage container [{0}] does not exist, creating it' -f $TenantStorageInfo.ContainerName)
+                Write-Output -InputObject ('{0} -         Azure Storage container [{1}] does not exist, creating it' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.ContainerName)
                 $StorageContainerTenant = New-AzureStorageContainer -Name ($TenantStorageInfo.ContainerName).ToLowerInvariant() -Context $StorageAccountTenantContext.Context
             }
 
@@ -167,31 +166,31 @@ Try {
                 $BlobDestination = ('{0}\{0}.json' -f $CloudBlobContainerName)
 
                 #Get the AzureBlobContent and store it for unziping
-                Write-Output -InputObject ('        Getting Azure Storage Blob Content from cludblob [{0}]' -f $CloudBlobContainer.name)
+                Write-Output -InputObject ('{0} -         Getting Azure Storage Blob Content from cludblob [{1}]' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainer.name)
                 $null = Get-AzureStorageBlobContent -CloudBlob $CloudBlobContainer -Context $StorageContainerPrintixExtract.Context -Destination $SourcePath -Force
 
                 #Unzip the content
-                Write-Output -InputObject ('        Unzipping file [{0}]' -f $SourcePath)
+                Write-Output -InputObject ('{0} -             Unzipping file [{1}]' -f (Get-Date -format $Global:TimestampFormat), $SourcePath)
                 $null = Expand-Archive -Path $SourcePath -DestinationPath $DestinationPath -force
 
                 #Verify that we actually have data in our file
                 $ItemLength = Get-Item -Path $DestFile -ErrorAction SilentlyContinue
                 if ($ItemLength.length -lt 20) {
-                    Write-Warning -Message ('        [{0}] does not seem to have any content. Skipping file' -f $CloudBlobContainerName)
+                    Write-Warning -Message ('{0} -              [{1}] does not seem to have any content. Skipping file' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainerName)
                 }
                 elseif ([string]::IsNullOrEmpty($ItemLength)) {
-                    Throw ('        Unable to get file [{0}] content. Skipping file' -f $DestFile)
+                    Throw ('{0} -             Unable to get file [{1}] content. Skipping file' -f (Get-Date -format $Global:TimestampFormat), $DestFile)
                 }
                 else {
 
                     #Make sure the file is UTF-8 encoded
-                    Write-Output -InputObject ('        Changing encoding to UTF8')
+                    Write-Output -InputObject ('{0} -             Changing encoding to UTF8' -f (Get-Date -format $Global:TimestampFormat) )
                     $null = [Io.File]::ReadAllText($DestFile) | Out-File -FilePath $DestFileTemp -Encoding utf8
                     $null = Remove-item -Path $DestFile -Force
                     $null = Rename-Item -Path $DestFileTemp -NewName $DestFile
 
                     #Upload to destination blob
-                    Write-Output -InputObject ('        Uploading file to container [{0}]' -f $TenantStorageInfo.ContainerName)
+                    Write-Output -InputObject ('{0} -             Uploading file to container [{1}]' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.ContainerName)
                     $null = Set-AzureStorageBlobContent -File $DestFile -Context $StorageContainerTenant.Context -Container $TenantStorageInfo.ContainerName -Blob $BlobDestination -Force
                 }
 
@@ -203,21 +202,21 @@ Try {
                     #Verify that we actually have data in our file
                     $ItemLength = Get-Item -Path $DestFile -ErrorAction SilentlyContinue
                     if ($ItemLength.length -lt 20) {
-                        Write-Warning -Message ('        [{0}] does not seem to have any content. Breaking' -f $CloudBlobContainerName)
+                        Write-Warning -Message ('{0} -            [{1}] does not seem to have any content. Breaking' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainerName)
                     }
                     elseif ([string]::IsNullOrEmpty($ItemLength)) {
-                        Throw ('        Unable to get file [{0}] content. Breaking' -f $DestFile)
+                        Throw ('{0} -             Unable to get file [{1}] content. Breaking' -f (Get-Date -format $Global:TimestampFormat), $DestFile)
                     }
                     else {
 
                         #Make sure the file is UTF-8 encoded
-                        Write-Output -InputObject ('        Changing encoding to UTF8')
+                        Write-Output -InputObject ('{0} -             Changing encoding to UTF8' -f (Get-Date -format $Global:TimestampFormat) )
                         $null = [Io.File]::ReadAllText($DestFile) | Out-File -FilePath $DestFileTemp -Encoding utf8
                         $null = Remove-item -Path $DestFile -Force
                         $null = Rename-Item -Path $DestFileTemp -NewName $DestFile
 
                         #Upload to destination blob
-                        Write-Output -InputObject ('        Uploading file to container [{0}]' -f $TenantStorageInfo.ContainerName)
+                        Write-Output -InputObject ('{0} -             Uploading file to container [{1}]' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.ContainerName)
                         $null = Set-AzureStorageBlobContent -File $DestFile -Context $StorageContainerTenant.Context -Container $TenantStorageInfo.ContainerName -Blob $BlobDestination -Force
                     }
                 }  #end foreach
@@ -226,18 +225,20 @@ Try {
 
             #Delete the extract container
             if ($DeleteExtractedData) {
-                Write-Output -InputObject ('        Deleting container [{0}]' -f $ExtractResults.ContainerName)
+                Write-Output -InputObject ('{0} -         Deleting container [{1}]' -f (Get-Date -format $Global:TimestampFormat), $ExtractResults.ContainerName)
                 Remove-AzureStorageContainer -Name $ExtractResults.ContainerName -Context $StorageAccountPrintixContext.context -force
             }
+
+            Write-Output -InputObject ('{0} - Successfully extracted data for tenant [{1}]' -f (Get-Date -format $Global:TimestampFormat), $PrintixTenant.tenant_name)
         
         } #end if
         else {
-            Write-warning -Message ('Unable to get a successfull extract. Error: {0}' -f $ExtractResults.ExtractStatus)
+            Write-warning -Message ('{0} - Unable to get a successfull extract. Error: {1}' -f (Get-Date -format $Global:TimestampFormat), $ExtractResults.ExtractStatus)
         }
 
     } #end foreach
 
-    Write-Output -InputObject 'Successfully extracted data.'
+    Write-Output -InputObject ('{0} - Successfully extracted data for all tenants.' -f (Get-Date -format $Global:TimestampFormat))
 } #end try
 catch {
     # Construct Message

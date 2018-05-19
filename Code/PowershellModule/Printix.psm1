@@ -2,21 +2,21 @@ Function Get-PrintixAuthorizationToken {
     [CmdletBinding()] 
     param (
     )
-    Write-Verbose -Message 'Getting Printix Authorization Token'
+    Write-Verbose -Message ('{0} - Getting Printix Authorization Token' -f (Get-Date -format $Global:TimestampFormat))
 
     #Set Authorization Uri and Content Type
     $AuthorizationUri = 'https://auth.printix.net/oauth/token'
     $ContentType = 'application/x-www-form-urlencoded'
 
-    write-Verbose -Message 'Setting body'
+    write-Verbose -Message ('{0} - Setting body' -f (Get-Date -format $Global:TimestampFormat))
     #Set body according to Authentication doc; https://printix.bitbucket.io/index-005e71b7-013f-4dbb-9227-020367495ac4.html
     $Body = ('grant_type=client_credentials&client_id={0}&client_secret={1}' -f $Global:ClientCredentials.UserName, $Global:ClientCredentials.GetNetworkCredential().Password)
 
     #Catch the X-Printix-Request-Id in case of failure. It's needed by printix for debugging
     try {
-        Write-Verbose -Message 'Getting Auth headers'
+        Write-Verbose -Message ('{0} - Getting Authentication headers' -f (Get-Date -format $Global:TimestampFormat))
         $AuthorizationToken = Invoke-RestMethod -Uri $AuthorizationUri -Method Post -ContentType $ContentType -Body $Body -ErrorAction:Stop
-        Write-Verbose -Message 'Setting script expire time'
+        Write-Verbose -Message ('{0} - Setting script expire time' -f (Get-Date -format $Global:TimestampFormat))
         $Global:HeadersExipreTime = (Get-date).AddSeconds($AuthorizationToken.expires_in)
     }
     catch {
@@ -34,16 +34,15 @@ Function Get-PrintixAuthorizationToken {
         $ErrorMessage += " `n"
         Write-Error -Message $ErrorMessage
     }
-    Write-Verbose -Message 'Return Auth headers'
+    Write-Verbose -Message ('{0} - Return Authentication headers' -f (Get-Date -format $Global:TimestampFormat))
     Return $AuthorizationToken
 }
-
 
 Function Set-PrintixHttpHeaders {
     [CmdletBinding()] 
     param (
     )
-    Write-Verbose -Message 'Setting Printix HTTP Headers'
+    Write-Verbose -Message ('{0} - Setting Printix HTTP Headers' -f (Get-Date -format $Global:TimestampFormat))
 
     $AuthorizationToken = Get-PrintixAuthorizationToken
 
@@ -59,11 +58,11 @@ Function Get-PrintixPartnerInformation {
     [CmdletBinding()] 
     param (
     )
-    Write-Verbose -Message 'Getting Printix Partner Information'
+    Write-Verbose -Message ('{0} - Getting Printix Partner Information' -f (Get-Date -format $Global:TimestampFormat))
 
-    #Handle the fact that the auth headers might have expired
+    #Handle the fact that the Authentication headers might have expired
     if ($Global:HeadersExipreTime -lt (get-date).AddSeconds(+10)) {
-        Write-Warning -Message 'Auth headers expired. Getting new http header'
+        Write-Verbose -Message ('{0} - Authentication headers expired. Getting new authentication headers' -f (Get-Date -format $Global:TimestampFormat))
         Set-PrintixHttpHeaders
     }
 
@@ -97,11 +96,11 @@ Function Get-PrintixPartnerTenants {
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         $TenantsHref
     )
-    Write-Verbose -Message 'Getting Printix Partner tenants'
+    Write-Verbose -Message ('{0} - Getting Printix Partner tenants' -f (Get-Date -format $Global:TimestampFormat))
 
-    #Handle the fact that the auth headers might have expired
+    #Handle the fact that the Authentication headers might have expired
     if ($Global:HeadersExipreTime -lt (get-date).AddSeconds(+10)) {
-        Write-Warning -Message 'Auth headers expired. Getting new http header'
+        Write-Verbose -Message ('{0} - Authentication headers expired. Getting new authentication headers' -f (Get-Date -format $Global:TimestampFormat))
         Set-PrintixHttpHeaders
     }
 
@@ -135,11 +134,11 @@ Function Get-PrintixTenantInformation {
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         $TenantHref
     )
-    Write-Verbose -Message 'Getting Printix tenant'
+    Write-Verbose -Message ('{0} - Getting Printix tenant' -f (Get-Date -format $Global:TimestampFormat))
 
-    #Handle the fact that the auth headers might have expired
+    #Handle the fact that the Authentication headers might have expired
     if ($Global:HeadersExipreTime -lt (get-date).AddSeconds(+10)) {
-        Write-Warning -Message 'Auth headers expired. Getting new http header'
+        Write-Verbose -Message ('{0} - Authentication headers expired. Getting new authentication headers' -f (Get-Date -format $Global:TimestampFormat))
         Set-PrintixHttpHeaders
     }
 
@@ -183,9 +182,9 @@ Function New-PrintixDataExtract {
     #Catch the X-Printix-Request-Id in case of failure. It's needed by printix for debugging
     try {
 
-        #Handle the fact that the auth headers might have expired
+        #Handle the fact that the Authentication headers might have expired
         if ($Global:HeadersExipreTime -lt (get-date).AddSeconds(+10)) {
-            Write-Warning -Message 'Auth headers expired. Getting new http header'
+            Write-Verbose -Message ('{0} - Authentication headers expired. Getting new authentication headers' -f (Get-Date -format $Global:TimestampFormat))
             Set-PrintixHttpHeaders
         }
 
@@ -214,11 +213,11 @@ Function New-PrintixDataExtract {
 
         #Wait until extract is completed
         do {
-            Write-Verbose -Message ('Checked extract status [{0}] times.' -f $ExtractstatusCounter)
+            Write-Verbose -Message ('{0} - Checked extract status [{0}] times.' -f (Get-Date -format $Global:TimestampFormat), $ExtractstatusCounter)
 
-            #Handle the fact that the auth headers might have expired
+            #Handle the fact that the Authentication headers might have expired
             if ($Global:HeadersExipreTime -lt (get-date).AddSeconds(+10)) {
-                Write-Warning -Message 'Auth headers expired. Getting new http header'
+                Write-Verbose -Message ('{0} - Authentication headers expired. Getting new authentication headers' -f (Get-Date -format $Global:TimestampFormat))
                 Set-PrintixHttpHeaders
             }
 
@@ -229,10 +228,10 @@ Function New-PrintixDataExtract {
             start-sleep -Seconds (Get-Random -Minimum 5 -Maximum 20)
 
         }
-        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 60)
+        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 90)
 
-        if ($ExtractstatusCounter -gt 60) {
-            Write-Warning -Message ('ExtractstatusCounter is greather than 60. Data extract might be uncomplete!' )
+        if ($ExtractstatusCounter -gt 90) {
+            Write-Warning -Message ('{0} - ExtractstatusCounter is greather than 90. Data extract might be uncomplete!' -f (Get-Date -Format $Global:TimestampFormat))
             $SuccessfullExtract = $false
         }
         else {
@@ -241,7 +240,7 @@ Function New-PrintixDataExtract {
 
         #Output usefull verbose information
         $ExtractStatusEndtime = get-date
-        Write-Verbose -Message ('Extract completed. Time elapsed: {0:mm} min {0:ss} sec' -f ($ExtractStatusEndtime - $ExtractStatusStartTime))
+        Write-Verbose -Message ('{0} - Extract completed. Time elapsed: {1:mm} min {1:ss} sec' -f (Get-Date -Format $Global:TimestampFormat), ($ExtractStatusEndtime - $ExtractStatusStartTime))
 
         #Create return results. Return the containerName since it's used for getting the blobs
         $results = @{
