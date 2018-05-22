@@ -11,6 +11,8 @@ This solution contains multiple key components;
 ## Demo
 A demo of the Printix solution template can be viewed [here](https://app.powerbi.com/view?r=eyJrIjoiNGZhMjJlMTMtYzgwZi00ZmRkLWExNzItZjUxMTFhNWQxM2U2IiwidCI6IjNlYWFmMWQzLTZmOWUtNDBmZC1iN2U5LTYwYjQ1ZTU1ZTEyNSIsImMiOjh9). 
 
+Please note that after a commit to the public demo solution, it might take one hour before the change is visible. 
+
 # Getting started
 
 ## Prerequisites
