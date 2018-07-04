@@ -20,7 +20,7 @@ Please note that after a commit to the public demo solution, it might take one h
 2. You must have a valid [Printix](printix.net) Subscription.
 3. You must meet the prerequisites for using the [Printix API](https://printix.bitbucket.io/index-005e71b7-013f-4dbb-9227-020367495ac4.html).
 4. You must have a valid [Azure Subscription](https://azure.microsoft.com/en-us/free/).
-5. You must have provisioned a Storage account with a container. If you’re unsure on how to do that, you can read [About Azure storage accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
+5. You must have provisioned a Storage account (general purpose V2) with a container (blob). If you’re unsure on how to do that, you can read [About Azure storage accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
 6. You must have provisioned an Azure Automation account. If you’re unsure on how to do that, you can read the [Create a Standalone Azure Automation Account](https://docs.microsoft.com/en-us/azure/automation/automation-create-standalone-account).
 
 ## Step 1 - Create an Azure Automation runbook, credentials and set a schedule
@@ -28,20 +28,20 @@ Please note that after a commit to the public demo solution, it might take one h
 To ensure that the dataset is updated on a daily schedule, we will configure an Azure automation runbook to update the dataset.
 
 ### Step 1.1 Import Printix Module
-The first thing you need to do, is to import the Printix PowerShell module. Scroll down under the Automation Account and look under Shared Resources.
+The first thing you need to do is to import the Printix PowerShell module. Scroll down under the Automation Account and look under Shared Resources.
 
 You’ll see **Modules** and **Modules gallery**. Click on **Modules**.
 
  ![AzureAutomation_Overview.PNG](./Images/Documentation/AzureAutomation_Overview.PNG)
 
-To import the module into your Automation Account, click on **Import** at the top. Select the "Printix.zip" file from the "Code\PowerShellModule" directory. Click **OK** to upload the file. When completed, you will see a notification that the module was imported successfully.
+To import the module into your Automation Account, click on **Add Module**. Select the "Printix.zip" file from the "Code\PowerShellModule" directory. Click **OK** to upload the file. When completed, you will see a notification that the module was imported successfully.
 
 ### Step 1.2 Create a credential asset
 The second thing you will need to do, is to create a Credential asset, where you will store the Printix API ClientID and Secret. 
 
-Scroll down under the Automation Account and look under Shared Resources.
-Click on **Credentials** under **shared Resources**.
-Click on "Add a credential" in the top menu. 
+Scroll down under the Automation Account and look under **Shared Resources**.
+Click on **Credentials**.
+Click on **Add a credential**.
 
  ![AzureAutomation_AddCredential.PNG](./Images/Documentation/AzureAutomation_AddCredential.PNG)
 
@@ -49,28 +49,28 @@ Click on "Add a credential" in the top menu.
  In the **User name** field you will enter the Printix API ClientID.
  In the **Password** and **Confirm Password** fields you will enter the Printix API secret.
 
- ! [AzureAutomation_AddCredential.PNG](./Images/Documentation/AzureAutomation_NewCredentials.PNG)
+ ![AzureAutomation_AddCredential.PNG](./Images/Documentation/AzureAutomation_NewCredentials.PNG)
 
 ### Step 1.3 Upload and edit the runbook
 The third thing you will need to do, is to configure a runbook that will run the "Get-PrintixDataExtract.ps1" script daily.
 
-Scroll down under the Automation Account and look for **Process Automation**. Click on **Runbooks. ** In the top menu, click on **Add a runbook.** Select "Import an Existing runbook" and upload the 'Get-PrintixDataExtract.ps1' file from under the "code" directory. Click **Create.**
+Scroll down under the Automation Account and look for **Process Automation**. Click on **Runbooks**. In the top menu, click on **Add a runbook.** Select **Import an Existing runbook** and upload the **Get-PrintixDataExtract.ps1** file from under the **code** directory. Click **Create.**
 
  ![AzureAutomation_AddRunbook.PNG](./Images/Documentation/AzureAutomation_AddRunbook.PNG)
 
  When the runbook is successfully imported, open the runbook by clicking on the **Get-PrintixDataExtract** runbook. In the top menu, click on **edit**.
 
 Now you can edit the $StorageMapping object, so it reflects your own environment.
-Follow the instructions carefully! Please note that the Storage accounts you specify here must exist before running the runbook!
+Follow the instructions carefully! Please note that the Storage accounts you specify here must exist **before** running the runbook!
 
  ![AzureAutomation_EditStorageMapping.PNG](./Images/Documentation/AzureAutomation_EditStorageMapping.PNG)
 
  When you have successfully filled out the StorageMapping object, you should click **save** and then do a test of the code by clicking on the **test pane** button on the top menu.
 
 Fill out the relevant parameters as described in the documentation.
-**PartnerID ** is your Printix partner ID.
+**PartnerID** is your Printix partner ID.
 **ClientCredentialsName** is the credential asset you created in step 1.2.
-**DeleteExtractedData** will delete the temporary data extract if set to True, after it's successfully uploaded to its final destination.
+**DeleteExtractedData** will delete the temporary data extract if set to True (after it's successfully uploaded to its final destination).
 **DaysToExtract** controls how many days of data to extract from the Printix API. The valid range is 1-89.
 
 If you experience any problems while running the test, you should turn on verbose debugging by setting the $VerbosePreference variable to 'Continue' and rerun the test. This will give you a much more detailed output.
