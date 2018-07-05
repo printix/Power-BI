@@ -20,7 +20,7 @@ Please note that after a commit to the public demo solution, it might take one h
 2. You must have a valid [Printix](printix.net) Subscription.
 3. You must meet the prerequisites for using the [Printix API](https://printix.bitbucket.io/index-005e71b7-013f-4dbb-9227-020367495ac4.html).
 4. You must have a valid [Azure Subscription](https://azure.microsoft.com/en-us/free/).
-5. You must have provisioned a Storage account (general purpose V2) with a container (blob). If you’re unsure on how to do that, you can read [About Azure storage accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
+5. You must have provisioned a Storage account (general purpose V2 or V1) with a container (blob). If you’re unsure on how to do that, you can read [About Azure storage accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
 6. You must have provisioned an Azure Automation account. If you’re unsure on how to do that, you can read the [Create a Standalone Azure Automation Account](https://docs.microsoft.com/en-us/azure/automation/automation-create-standalone-account).
 
 ## Step 1 - Create an Azure Automation runbook, credentials and set a schedule
@@ -161,3 +161,17 @@ If you for some reason want to change the start time of the "Dates" table, you c
 ## Changing the timestamp of the logs
 If you want to use another timestamp for logging, you can change the "$Global:TimestampFormat" parameter in the "Get-PrintixDataExtract.ps1" file according to [Standard DateTime formats](https://ss64.com/ps/syntax-dateformats.html).
 
+# Troubleshooting
+
+## Exception: The remote server returned an error: (400) Bad Request
+
+If the runbook fails with an 400 bad request, this is usually caused by one of two problems;
+- Your Powershell Modules are out of date. Read [here](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) for how you can update them.
+- The run as account does not have the necessary permissions to get a storage account key.Read more [here](https://docs.microsoft.com/en-us/azure/automation/automation-create-runas-account).
+
+## Exception: The remote server returned an error: (500) Internal server Error
+
+If the runbook fails with an 500 bad request, this is usally caused by one of three problems;
+- You specified an invalid Printix partnerID, ClientID or secret
+- You specified an invalid printix tenant
+- You passed on an invalid timespam

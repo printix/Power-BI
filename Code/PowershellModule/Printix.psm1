@@ -194,7 +194,9 @@ Function New-PrintixDataExtract {
 
         #Get blob storage key
         $StorageAccountPrintixExtractedDataKey = (Get-AzureRmStorageaccountKey -Name $StorageMapping.StorageAccountPrintixExtractedData -ResourceGroupName $StorageMapping.StorageAccountPrintixExtractedDataResourceGroup)[0].value
-
+        if ([string]::IsNullOrEmpty($StorageAccountPrintixExtractedDataKey)) {
+            Write-Error ('Unable to get Access Key from storage account [{0}] in resource group [{1}]' -f $StorageMapping.StorageAccountPrintixExtractedData, $StorageMapping.StorageAccountPrintixExtractedDataResourceGroup) -ErrorAction Stop
+        }
         #Build request body
         $Requestbody = @{
             'from'                 = $FromDate

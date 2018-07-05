@@ -117,7 +117,7 @@ Try {
     $PrintixPartnerInformation = Get-PrintixPartnerInformation
     Write-Output -InputObject ('{0} - Working on Partner account [{1}] email [{2}]' -f (Get-Date -format $Global:TimestampFormat), $PrintixPartnerInformation.name, $PrintixPartnerInformation.email)
 
-    $PrintixTenants = (Get-PrintixPartnerTenants -TenantsHref $PrintixPartnerInformation._links.'px:tenants'.href) | Select-object -expandproperty Tenants
+    [array]$PrintixTenants = (Get-PrintixPartnerTenants -TenantsHref $PrintixPartnerInformation._links.'px:tenants'.href) | Select-object -expandproperty Tenants
     Write-Output  -InputObject ('{0} - Found [{1}] tenants' -f (Get-Date -format $Global:TimestampFormat), $PrintixTenants.count)
 
     #Only work with tenants that are specifed in the $StorageMapping object.
