@@ -1,6 +1,6 @@
 <#
     .SYNOPSIS
-    This script will extract relevant data from the Printix API,process it and make it ready for use for the Power BI report.
+    This script will extract relevant data from the Printix API, process it and make it ready for use for the Power BI report.
 
     .DESCRIPTION
     This script will extract relevant data from the Printix API (for all tenants you have access to) which in turn will upload the extracted data to a specificed Azure Storage account.
@@ -16,7 +16,7 @@
     If true, the script will delete the extract data from the source blob
 
     .PARAMETER DaysToExtract
-    Number of months with data to extract from Printix
+    Number of days with data to extract (1-89)
 
     .EXAMPLE
     Get-PrintixData -PartnerID '45dbbbbb-62929-1111-4444-15153b055555' -ClientCredentialsName 'PrintixClientCredentails' -DeleteExtractedData $true -DaysToExtract 5
@@ -37,11 +37,12 @@ param (
     [int]$DaysToExtract = 60
 )
 
+# (To keep the code base as minimal as possible, we use the same StorageMapping object in both the Partner and Direct customer runbook.)
 #This object is used for mapping the different printix tenants, to different Azure storage accounts and/or containers. 
 #StorageAccountPrintixExtractedData is the storage account where the extracted printix data will be temporarly stored
 #StorageAccountPrintixExtractedDataResourceGroup is the resource group name of the StorageAccountPrintixExtractedData
 #For each customer, create a PsCustomObject under the 'Tenants' property, and fill the properties with the following;
-#Fill in the StorageAccount name, resourcegroup and Container name where you want to store the processed printix data, for use with Power bi, for a specific customer. 
+#Fill in the TenantDomain, StorageAccount name, resourcegroup and Container name where you want to store the processed printix data, for use with Power bi, for a specific customer. 
 [PSCustomObject]$StorageMapping = @{
     StorageAccountPrintixExtractedData              = 'powerbiprintix2'
     StorageAccountPrintixExtractedDataResourceGroup = 'printixPowerBI-rg'
@@ -127,9 +128,11 @@ Try {
     #Loop through each tenant 
     Foreach ($PrintixTenant in $PrintixTenants) {
 
+        #Get the Extract URI for this specific tenant
         Write-Output  -InputObject ('{0} - Working on tenant [{1}] tenantdomain [{2}]' -f (Get-Date -format $Global:TimestampFormat), $PrintixTenant.tenant_name, $PrintixTenant.tenant_domain)
         $TenantInformation = Get-PrintixTenantInformation -TenantHref $PrintixTenant.'_links'.'px:dataextract'.href
 
+        #Request the Data Extract
         Write-Output -InputObject ('{0} -   Requesting data extract. This might take some time...' -f (Get-Date -format $Global:TimestampFormat))
         $ExtractResults = New-PrintixDataExtract -StorageMapping $StorageMapping -DaysToExtract $DaysToExtract -ExtractUri $TenantInformation.'_links'.self.href
 
