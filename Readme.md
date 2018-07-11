@@ -21,88 +21,20 @@ Please note that after a commit to the public demo solution, it might take one h
 3. You must meet the prerequisites for using the [Printix API](https://printix.bitbucket.io/index-005e71b7-013f-4dbb-9227-020367495ac4.html).
 4. You must have a valid [Azure Subscription](https://azure.microsoft.com/en-us/free/).
 5. You must have provisioned a Storage account (general purpose V2 or V1) with a container (blob). If you’re unsure on how to do that, you can read [About Azure storage accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
-6. You must have provisioned an Azure Automation account. If you’re unsure on how to do that, you can read the [Create a Standalone Azure Automation Account](https://docs.microsoft.com/en-us/azure/automation/automation-create-standalone-account).
+6. You must have provisioned an Azure Automation account. If you’re unsure on how to do that, you can read the [Create a Standalone Azure Automation Account](https://docs.microsoft.com/en-us/azure/automation/automation-create-standalone-account). **Please** make sure that you [update](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) the modules of the new Automation account, as the account might not contain the latest modules! Failure to do so, will result in failures while running the runbook!
 
 ## Step 1 - Create an Azure Automation runbook, credentials and set a schedule
 
-To ensure that the dataset is updated on a daily schedule, we will configure an Azure automation runbook to update the dataset.
-
-### Step 1.1 Import Printix Module
-The first thing you need to do is to import the Printix PowerShell module. Scroll down under the Automation Account and look under Shared Resources.
-
-You’ll see **Modules** and **Modules gallery**. Click on **Modules**.
-
- ![AzureAutomation_Overview.PNG](./Images/Documentation/AzureAutomation_Overview.PNG)
-
-To import the module into your Automation Account, click on **Add Module**. Select the "Printix.zip" file from the "Code\PowerShellModule" directory. Click **OK** to upload the file. When completed, you will see a notification that the module was imported successfully.
-
-### Step 1.2 Create a credential asset
-The second thing you will need to do, is to create a Credential asset, where you will store the Printix API ClientID and Secret. 
-
-Scroll down under the Automation Account and look under **Shared Resources**.
-Click on **Credentials**.
-Click on **Add a credential**.
-
- ![AzureAutomation_AddCredential.PNG](./Images/Documentation/AzureAutomation_AddCredential.PNG)
-
- In the **Name** field, ensure to give the asset a unique name. You will need this later.
- In the **User name** field you will enter the Printix API ClientID.
- In the **Password** and **Confirm Password** fields you will enter the Printix API secret.
-
- ![AzureAutomation_AddCredential.PNG](./Images/Documentation/AzureAutomation_NewCredentials.PNG)
-
-### Step 1.3 Upload and edit the runbook
-The third thing you will need to do, is to configure a runbook that will run the "Get-PrintixDataExtract.ps1" script daily.
-
-Scroll down under the Automation Account and look for **Process Automation**. Click on **Runbooks**. In the top menu, click on **Add a runbook.** Select **Import an Existing runbook** and upload the **Get-PrintixDataExtract.ps1** file from under the **code** directory. Click **Create.**
-
- ![AzureAutomation_AddRunbook.PNG](./Images/Documentation/AzureAutomation_AddRunbook.PNG)
-
- When the runbook is successfully imported, open the runbook by clicking on the **Get-PrintixDataExtract** runbook. In the top menu, click on **edit**.
-
-Now you can edit the $StorageMapping object, so it reflects your own environment.
-Follow the instructions carefully! Please note that the Storage accounts you specify here must exist **before** running the runbook!
-
- ![AzureAutomation_EditStorageMapping.PNG](./Images/Documentation/AzureAutomation_EditStorageMapping.PNG)
-
- When you have successfully filled out the StorageMapping object, you should click **save** and then do a test of the code by clicking on the **test pane** button on the top menu.
-
-Fill out the relevant parameters as described in the documentation.
-**PartnerID** is your Printix partner ID.
-**ClientCredentialsName** is the credential asset you created in step 1.2.
-**DeleteExtractedData** will delete the temporary data extract if set to True (after it's successfully uploaded to its final destination).
-**DaysToExtract** controls how many days of data to extract from the Printix API. The valid range is 1-89.
-
-If you experience any problems while running the test, you should turn on verbose debugging by setting the $VerbosePreference variable to 'Continue' and rerun the test. This will give you a much more detailed output.
-
-![AzureAutomation_TestRun.PNG](./Images/Documentation/AzureAutomation_TestRun.PNG)
-
-When your finished testing, head back to the **Edit PowerShell runbook** blade, and click on **Publish.**
-
- ### Step 1.4 Set a schedule
-
- To ensure we have updated data daily, we will set up a schedule to run the runbook on a daily basis.
-
- In the left menu of the **Get-PrintixDataExtract** runbook, select **Schedules** and hit the **Add a schedule** button.
-
-![AzureAutomation_NewSchedule.PNG](./Images/Documentation/AzureAutomation_NewSchedule.PNG)
-
-First, click on **Link a schedule to your runbook** and follow the **Create a new schedule** wizard. An example schedule looks like this;
-
-![AzureAutomation_ExampleSchedule.PNG](./Images/Documentation/AzureAutomation_ExampleSchedule.PNG)
-
-  Now click on **Configure parameters and run settings** and fill in the parameters.
-
-![AzureAutomation_ExampleSchedule.PNG](./Images/Documentation/AzureAutomation_AddRunbookParameters.PNG)
-
-Your now all set! The runbook will run on a daily schedule to ensure you have fresh data!  
+This step is different for Direct customers and Partners. Follow to appropriate documentation found here;
+- [Partner documentation](./Documentation/ReadmeForPartners.md)
+- [Direct Customer documentation](./Documentation/ReadmeForDirectCustomers.md)
 
 ## Step 2 - Deploy the Power BI report and configure a scheduled update
 
 To ensure everyone in your organization, or even guests, can view the report, you have to publish it to Power BI online.
 
 ### Step 2.1 Upload the report
-To upload the report to Power BI online, you first have to open the **Printix.pbix** from the **PowerBI** directory in Power BI desktop.
+To upload the report to Power BI online, you first have to open the **Printix.PBIX** from the **PowerBI** directory in Power BI desktop.
 
 From the ribbon menu, click **Publish** (to the right, under share).
 
@@ -112,7 +44,7 @@ Select the destination where you want to publish the report, and click **select*
 
  ![PowerBI_PublishOnline.PNG](./Images/Documentation/PowerBI_PublishOnline_destination.PNG)
 
-When the report is published , you can click on **Open 'printix.pbix' in Power BI** to open the report in Power BI Online.
+When the report is published , you can click on **Open 'printix.PBIX' in Power BI** to open the report in Power BI Online.
 
  ![PowerBI_PublishOnline.PNG](./Images/Documentation/PowerBI_PublishOnline_success.PNG)
 
@@ -163,15 +95,19 @@ If you want to use another timestamp for logging, you can change the "$Global:Ti
 
 # Troubleshooting
 
+## General
+
+If your having trouble running the code from an Azure automation account, please make sure that your [Modules](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) are up to date! 
+
 ## Exception: The remote server returned an error: (400) Bad Request
 
 If the runbook fails with an 400 bad request, this is usually caused by one of two problems;
-- Your Powershell Modules are out of date. Read [here](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) for how you can update them.
+- Your PowerShell Modules are out of date. Read [here](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) for how you can update them.
 - The run as account does not have the necessary permissions to get a storage account key.Read more [here](https://docs.microsoft.com/en-us/azure/automation/automation-create-runas-account).
 
 ## Exception: The remote server returned an error: (500) Internal server Error
 
-If the runbook fails with an 500 bad request, this is usally caused by one of three problems;
+If the runbook fails with an 500 bad request, this is usually caused by one of three problems;
 - You specified an invalid Printix partnerID, ClientID or secret
 - You specified an invalid printix tenant
-- You passed on an invalid timespam
+- You passed on an invalid timespan
