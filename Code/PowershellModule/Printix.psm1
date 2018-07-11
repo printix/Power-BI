@@ -1,5 +1,5 @@
 Function Get-PrintixAuthorizationToken {
-    [CmdletBinding()] 
+    [CmdletBinding()]
     param (
     )
     Write-Verbose -Message ('{0} - Getting Printix Authorization Token' -f (Get-Date -format $Global:TimestampFormat))
@@ -39,7 +39,7 @@ Function Get-PrintixAuthorizationToken {
 }
 
 Function Set-PrintixHttpHeaders {
-    [CmdletBinding()] 
+    [CmdletBinding()]
     param (
     )
     Write-Verbose -Message ('{0} - Setting Printix HTTP Headers' -f (Get-Date -format $Global:TimestampFormat))
@@ -55,7 +55,7 @@ Function Set-PrintixHttpHeaders {
 }
 
 Function Get-PrintixPartnerInformation {
-    [CmdletBinding()] 
+    [CmdletBinding()]
     param (
     )
     Write-Verbose -Message ('{0} - Getting Printix Partner Information' -f (Get-Date -format $Global:TimestampFormat))
@@ -91,7 +91,7 @@ Function Get-PrintixPartnerInformation {
 }
 
 Function Get-PrintixPartnerTenants {
-    [CmdletBinding()] 
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         $TenantsHref
@@ -129,7 +129,7 @@ Function Get-PrintixPartnerTenants {
 }
 
 Function Get-PrintixTenantInformation {
-    [CmdletBinding()] 
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         $TenantHref
@@ -167,7 +167,7 @@ Function Get-PrintixTenantInformation {
 }
 
 Function New-PrintixDataExtract {
-    [CmdletBinding()] 
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         $StorageMapping,
@@ -230,17 +230,17 @@ Function New-PrintixDataExtract {
             start-sleep -Seconds (Get-Random -Minimum 5 -Maximum 20)
 
         }
-        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 90)
+        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 120)
 
-        if ($ExtractstatusCounter -gt 90) {
-            Write-Warning -Message ('{0} - ExtractstatusCounter is greather than 90. Data extract might be uncomplete!' -f (Get-Date -Format $Global:TimestampFormat))
+        if ($ExtractstatusCounter -gt 120) {
+            Write-Warning -Message ('{0} - ExtractstatusCounter is greather than 120. Data extract might be uncomplete!' -f (Get-Date -Format $Global:TimestampFormat))
             $SuccessfullExtract = $false
         }
         else {
             $SuccessfullExtract = $true
         }
 
-        #Output usefull verbose information
+        #Output useful verbose information
         $ExtractStatusEndtime = get-date
         Write-Verbose -Message ('{0} - Extract completed. Time elapsed: {1:mm} min {1:ss} sec' -f (Get-Date -Format $Global:TimestampFormat), ($ExtractStatusEndtime - $ExtractStatusStartTime))
 

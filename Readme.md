@@ -34,7 +34,7 @@ This step is different for Direct customers and Partners. Follow to appropriate 
 To ensure everyone in your organization, or even guests, can view the report, you have to publish it to Power BI online.
 
 ### Step 2.1 Upload the report
-To upload the report to Power BI online, you first have to open the **Printix.pbix** from the **PowerBI** directory in Power BI desktop.
+To upload the report to Power BI online, you first have to open the **Printix.PBIX** from the **PowerBI** directory in Power BI desktop.
 
 From the ribbon menu, click **Publish** (to the right, under share).
 
@@ -44,7 +44,7 @@ Select the destination where you want to publish the report, and click **select*
 
  ![PowerBI_PublishOnline.PNG](./Images/Documentation/PowerBI_PublishOnline_destination.PNG)
 
-When the report is published , you can click on **Open 'printix.pbix' in Power BI** to open the report in Power BI Online.
+When the report is published , you can click on **Open 'printix.PBIX' in Power BI** to open the report in Power BI Online.
 
  ![PowerBI_PublishOnline.PNG](./Images/Documentation/PowerBI_PublishOnline_success.PNG)
 
@@ -102,12 +102,12 @@ If your having trouble running the code from an Azure automation account, please
 ## Exception: The remote server returned an error: (400) Bad Request
 
 If the runbook fails with an 400 bad request, this is usually caused by one of two problems;
-- Your Powershell Modules are out of date. Read [here](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) for how you can update them.
+- Your PowerShell Modules are out of date. Read [here](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) for how you can update them.
 - The run as account does not have the necessary permissions to get a storage account key.Read more [here](https://docs.microsoft.com/en-us/azure/automation/automation-create-runas-account).
 
 ## Exception: The remote server returned an error: (500) Internal server Error
 
-If the runbook fails with an 500 bad request, this is usally caused by one of three problems;
+If the runbook fails with an 500 bad request, this is usually caused by one of three problems;
 - You specified an invalid Printix partnerID, ClientID or secret
 - You specified an invalid printix tenant
 - You passed on an invalid timespan

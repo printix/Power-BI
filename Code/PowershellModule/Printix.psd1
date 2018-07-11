@@ -12,7 +12,7 @@
     RootModule        = '.\Printix.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.0.6'
+    ModuleVersion     = '1.0.8'
 
     # ID used to uniquely identify this module
     #GUID = ''
@@ -50,13 +50,13 @@
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
 
-    # Script files (.ps1) that are run in the caller's environment prior to importing this module
+    # Script files (.PS1) that are run in the caller's environment prior to importing this module
     # ScriptsToProcess = @()
 
-    # Type files (.ps1xml) to be loaded when importing this module
+    # Type files (.PS1XML) to be loaded when importing this module
     # TypesToProcess = @()
 
-    # Format files (.ps1xml) to be loaded when importing this module
+    # Format files (.PS1XML) to be loaded when importing this module
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
@@ -69,7 +69,7 @@
 	'Get-PrintixPartnerTenants',
 	'Get-PrintixTenantInformation',
 	'New-PrintixDataExtract'
-	
+
     # Cmdlets to export from this module
     CmdletsToExport   = @()
 
