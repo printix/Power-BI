@@ -21,7 +21,7 @@ Please note that after a commit to the public demo solution, it might take one h
 3. You must meet the prerequisites for using the [Printix API](https://printix.bitbucket.io/index-005e71b7-013f-4dbb-9227-020367495ac4.html).
 4. You must have a valid [Azure Subscription](https://azure.microsoft.com/en-us/free/).
 5. You must have provisioned a Storage account (general purpose V2 or V1) with a container (blob). If you’re unsure on how to do that, you can read [About Azure storage accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
-6. You must have provisioned an Azure Automation account. If you’re unsure on how to do that, you can read the [Create a Standalone Azure Automation Account](https://docs.microsoft.com/en-us/azure/automation/automation-create-standalone-account).
+6. You must have provisioned an Azure Automation account. If you’re unsure on how to do that, you can read the [Create a Standalone Azure Automation Account](https://docs.microsoft.com/en-us/azure/automation/automation-create-standalone-account). **Please** make sure that you [update](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) the modules of the new Automation account, as the account might not contain the latest modules! Failure to do so, will result in failures while running the runbook!
 
 ## Step 1 - Create an Azure Automation runbook, credentials and set a schedule
 
@@ -95,6 +95,10 @@ If you want to use another timestamp for logging, you can change the "$Global:Ti
 
 # Troubleshooting
 
+## General
+
+If your having trouble running the code from an Azure automation account, please make sure that your [Modules](https://docs.microsoft.com/en-us/azure/automation/automation-update-azure-modules) are up to date! 
+
 ## Exception: The remote server returned an error: (400) Bad Request
 
 If the runbook fails with an 400 bad request, this is usually caused by one of two problems;
@@ -106,4 +110,4 @@ If the runbook fails with an 400 bad request, this is usually caused by one of t
 If the runbook fails with an 500 bad request, this is usally caused by one of three problems;
 - You specified an invalid Printix partnerID, ClientID or secret
 - You specified an invalid printix tenant
-- You passed on an invalid timespam
+- You passed on an invalid timespan

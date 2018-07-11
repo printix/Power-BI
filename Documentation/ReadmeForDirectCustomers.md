@@ -7,7 +7,7 @@ To ensure that the dataset is updated on a daily schedule, we will configure an 
 ### Step 1.1 Import Printix Module
 The first thing you need to do is to import the Printix PowerShell module. Scroll down under the Automation Account and look under Shared Resources.
 
-You’ll see **Modules** and **Modules gallery**. Click on **Modules**.
+You’ll see **Modules** and **Modules gallery**. Before continuing, make sure that your modules are up to date! If your unsure, please click on **Update Azure Modules** and wait for the update process to proceed. After that, you can click on **Modules**.
 
  ![AzureAutomation_Overview.PNG](.././Images/Documentation/AzureAutomation_Overview.PNG)
 
