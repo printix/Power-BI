@@ -27,14 +27,14 @@
 
 param (
     [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0, HelpMessage = 'This is the Printix Customer ID')]
-    [String] $PrintixCustomerID = 'bc274346-8827-4562-a685-1e4b414f9865',
+    [String] $PrintixCustomerID = '',
     [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 1, HelpMessage = 'This is the name of the credential asset, with the Printix clientId and secret.')]
-    [String]$ClientCredentialsName = 'printix',
+    [String]$ClientCredentialsName = '',
     [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 2, HelpMessage = 'If true, the script will delete the extract data from the source blob')]
     [bool]$DeleteExtractedData = $true,
     [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 3, HelpMessage = 'Number of days of data to extract from Printix. Valid data range is: 1-89')]
     [ValidateRange(1, 89)]
-    [int]$DaysToExtract = 6
+    [int]$DaysToExtract = 60
 )
 
 # (To keep the code base as minimal as possible, we use the same StorageMapping object in both the Partner and Direct customer runbook.)
@@ -135,47 +135,54 @@ Try {
         }
 
         #Get content from the extracted data, and store it in the destination container
-        Foreach ($ExtractType in $ExtractResults.ExtractStatus.extractStatuses.type) {
+            Foreach ($ExtractType in $ExtractResults.ExtractStatus.extractStatuses.type) {
 
-            #Create object names
-            $CloudBlobContainerName = $ExtractType
-            $DestinationPath = ('{0}\{1}' -f $env:TEMP, $CloudBlobContainerName)
-            $SourcePath = ('{0}.zip' -f $DestinationPath)
-            $DestFile = ('{0}\{1}.json' -f $DestinationPath, $CloudBlobContainerName)
-            $DestFileTemp = ('{0}\{1}_TEMP.json' -f $DestinationPath, $CloudBlobContainerName)
-            $BlobDestination = ('{0}\{0}.json' -f $CloudBlobContainerName)
-            $CloudBlobContainer = [array]($StorageContainerPrintixExtract.CloudBlobContainer.ListBlobs()) | where-object {$_.name -match ($CloudBlobContainerName.replace('_', '-')) }
+                #Create object names
+                $CloudBlobContainerName = $ExtractType.ToLowerInvariant().replace('_', '-')
+                $DestinationPath = ('{0}\{1}' -f $env:TEMP, $CloudBlobContainerName)
+                $SourcePath = ('{0}.zip' -f $DestinationPath)
+                $CloudBlobContainer = [array]($StorageContainerPrintixExtract.CloudBlobContainer.ListBlobs()) | where-object {$_.name -match ($CloudBlobContainerName) }
 
-            #Get the AzureBlobContent and store it for unzipping
-            Write-Output -InputObject ('{0} -         Getting Azure Storage Blob Content from cludblob [{1}]' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainer.name)
-            $null = Get-AzureStorageBlobContent -CloudBlob $CloudBlobContainer -Context $StorageContainerPrintixExtract.Context -Destination $SourcePath -Force
 
-            #Unzip the content
-            Write-Output -InputObject ('{0} -             Unzipping file [{1}]' -f (Get-Date -format $Global:TimestampFormat), $SourcePath)
-            $null = Expand-Archive -Path $SourcePath -DestinationPath $DestinationPath -force
+                #Get the AzureBlobContent and store it for unzipping
+                Write-Output -InputObject ('{0} -         Getting Azure Storage Blob Content from cludblob [{1}]' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainerName)
+                $null = Get-AzureStorageBlobContent -CloudBlob $CloudBlobContainer -Context $StorageContainerPrintixExtract.Context -Destination $SourcePath -Force
 
-            #Verify that we actually have data in our file
-            $ItemLength = Get-Item -Path $DestFile -ErrorAction SilentlyContinue
-            if ($ItemLength.length -lt 20) {
-                Write-Warning -Message ('{0} -              [{1}] does not seem to have any content. Skipping file' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainerName)
-            }
-            elseif ([string]::IsNullOrEmpty($ItemLength)) {
-                Throw ('{0} -             Unable to get file [{1}] content. Skipping file' -f (Get-Date -format $Global:TimestampFormat), $DestFile)
-            }
-            else {
+                #Unzip the content
+                Write-Output -InputObject ('{0} -             Unzipping file [{1}]' -f (Get-Date -format $Global:TimestampFormat), $SourcePath)
+                $null = Expand-Archive -Path $SourcePath -DestinationPath $DestinationPath -force
 
-                #Make sure the file is UTF-8 encoded
-                Write-Output -InputObject ('{0} -             Changing encoding to [UTF8]' -f (Get-Date -format $Global:TimestampFormat) )
-                $null = [Io.File]::ReadAllText($DestFile) | Out-File -FilePath $DestFileTemp -Encoding utf8
-                $null = Remove-item -Path $DestFile -Force
-                $null = Rename-Item -Path $DestFileTemp -NewName $DestFile
+                Foreach ($file in (Get-ChildItem $DestinationPath)) {
+                    Write-Output -InputObject ('{0} -           Working on file [{1}]' -f (Get-Date -format $Global:TimestampFormat), $file.name)
+                    $DestFile = ('{0}\{1}' -f $DestinationPath, $file.name )
+                    $DestFileTemp = ('{0}\{1}_TEMP' -f $DestinationPath, $file.name )
+                    $BlobDestination = ('{0}\{1}' -f $CloudBlobContainerName, $file.name)
+                    
 
-                #Upload to destination blob
-                Write-Output -InputObject ('{0} -             Uploading file to container [{1}]' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.ContainerName)
-                $null = Set-AzureStorageBlobContent -File $DestFile -Context $StorageContainerTenant.Context -Container $TenantStorageInfo.ContainerName -Blob $BlobDestination -Force
-            }
+                    #Verify that we actually have data in our file
+                    $ItemLength = Get-Item -Path $DestFile -ErrorAction SilentlyContinue
+                    if ($ItemLength.length -lt 20) {
+                        Write-Warning -Message ('{0} -              [{1}] does not seem to have any content. Skipping file' -f (Get-Date -format $Global:TimestampFormat), $CloudBlobContainerName)
+                    }
+                    elseif ([string]::IsNullOrEmpty($ItemLength)) {
+                        Throw ('{0} -             Unable to get file [{1}] content. Skipping file' -f (Get-Date -format $Global:TimestampFormat), $DestFile)
+                    }
+                    else {
 
-        } #end for each
+                        #Make sure the file is UTF-8 encoded
+                        Write-Output -InputObject ('{0} -             Changing encoding to [UTF8]' -f (Get-Date -format $Global:TimestampFormat) )
+                        $null = [Io.File]::ReadAllText($DestFile) | Out-File -FilePath $DestFileTemp -Encoding utf8
+                        $null = Remove-item -Path $DestFile -Force
+                        $null = Rename-Item -Path $DestFileTemp -NewName $DestFile
+
+                        #Upload to destination blob
+                        Write-Output -InputObject ('{0} -             Uploading file to container [{1}] folder [{2}]' -f (Get-Date -format $Global:TimestampFormat), $TenantStorageInfo.ContainerName, $CloudBlobContainerName)
+                        $null = Set-AzureStorageBlobContent -File $DestFile -Context $StorageContainerTenant.Context -Container $TenantStorageInfo.ContainerName -Blob $BlobDestination -Force
+                    }
+
+                }
+
+            } #end for each
 
         #Delete the extract container
         if ($DeleteExtractedData) {
