@@ -12,7 +12,7 @@
     RootModule        = '.\Printix.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.0.8'
+    ModuleVersion     = '1.0.9'
 
     # ID used to uniquely identify this module
     #GUID = ''
@@ -89,7 +89,7 @@
     # PrivateData = ''
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    # HelpInfoURI = 'https://github.com/printix/Power-BI'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''

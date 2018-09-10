@@ -176,7 +176,9 @@ Function New-PrintixDataExtract {
         [Parameter(ValueFromPipelineByPropertyName = $true, Position = 2)]
         [string]$ExtractUri,
         [Parameter(ValueFromPipelineByPropertyName = $true, Position = 3)]
-        [array]$PrintixDataToExtract = ('NETWORKS', 'TRACKING_DATA', 'JOBS', 'PRINTERS', 'DEVICE_READINGS', 'USERS', 'WORKSTATIONS')
+        [array]$PrintixDataToExtract = ('NETWORKS', 'TRACKING_DATA', 'JOBS', 'PRINTERS', 'DEVICE_READINGS', 'USERS', 'WORKSTATIONS'),
+        [Parameter(ValueFromPipelineByPropertyName = $true, Position = 4)]
+        [int]$ExtractstatusCounterLimit = 120
     )
 
     #Catch the X-Printix-Request-Id in case of failure. It's needed by printix for debugging
@@ -207,7 +209,7 @@ Function New-PrintixDataExtract {
         }
 
         #Create status counter and register start date
-        [int]$ExtractstatusCounter = 0
+        [int]$ExtractstatusCounter = 1
         $ExtractStatusStartTime = get-date
 
         #Request extract
@@ -215,7 +217,7 @@ Function New-PrintixDataExtract {
 
         #Wait until extract is completed
         do {
-            Write-Verbose -Message ('{0} - Checked extract status [{0}] times.' -f (Get-Date -format $Global:TimestampFormat), $ExtractstatusCounter)
+            Write-Verbose -Message ('{0} - Checked extract status [{1}] times.' -f (Get-Date -format $Global:TimestampFormat), $ExtractstatusCounter)
 
             #Handle the fact that the Authentication headers might have expired
             if ($Global:HeadersExipreTime -lt (get-date).AddSeconds(+10)) {
@@ -230,10 +232,10 @@ Function New-PrintixDataExtract {
             start-sleep -Seconds (Get-Random -Minimum 5 -Maximum 20)
 
         }
-        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt 120)
+        until ($ExtractStatus.completed -or $ExtractstatusCounter -gt $ExtractstatusCounterLimit)
 
-        if ($ExtractstatusCounter -gt 120) {
-            Write-Warning -Message ('{0} - ExtractstatusCounter is greather than 120. Data extract might be uncomplete!' -f (Get-Date -Format $Global:TimestampFormat))
+        if ($ExtractstatusCounter -gt $ExtractstatusCounterLimit) {
+            Write-Warning -Message ('{0} - ExtractstatusCounter is greather than {1}. Data extract might be uncomplete!' -f (Get-Date -Format $Global:TimestampFormat), $ExtractstatusCounterLimit)
             $SuccessfullExtract = $false
         }
         else {
