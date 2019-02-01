@@ -14,8 +14,8 @@ Please note that after a commit to the public demo solution, it might take one h
 
 ## Prerequisites
 1. You must install the Power BI desktop application either from [https://powerbi.microsoft.com](https://powerbi.microsoft.com/en-us/desktop/), or directly from the [Microsoft store](https://www.microsoft.com/nb-no/store/p/power-bi-desktop/9ntxr16hnw1t).
-2. You must have a valid [Printix](printix.net) Subscription.
-3. You must follow the [Printix Analytics](https://manuals.printix.net/administrator/1/en/topic/settings-page-analytics?q=power) documentation to get your data exported to a database.
+2. You must have a valid [Printix](https://www.printix.net) Subscription.
+3. You must follow the [Printix Analytics](https://manuals.printix.net/administrator/1/en/topic/settings-page-analytics) documentation to get your data exported to a database.
 
 ## Step 1 - Deploy the Power BI report and configure a scheduled update 
 
