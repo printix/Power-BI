@@ -18,7 +18,7 @@ A demo of the Printix solution template can be viewed [here](https://app.powerbi
 To start using the Printix Power BI solution, follow the steps described in the Printix Administrator Manual:
 1. [Setup Printix Analytics](https://manuals.printix.net/administrator/topic/how-to-setup-analytics)
 2. [Setup Power BI](https://manuals.printix.net/administrator/topic/how-to-setup-power-bi)
-3. (Optional) [Publish the report to Power BI Online Service](https://manuals.printix.net/administrator/topic/how-to-publish-to-power-bi-on-the-web)
+3. (Optional) [Publish the report to Power BI Service](https://manuals.printix.net/administrator/topic/how-to-publish-to-power-bi-on-the-web)
 
 Read more about what you can find in the report [here](https://manuals.printix.net/administrator/topic/how-to-interact-with-power-bi-report).
 
