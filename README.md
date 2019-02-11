@@ -3,8 +3,8 @@ The Printix Power BI solution Template is designed to give you insights into you
 data regarding users, workstation, printers, print queues and much more.
 
 This solution contains multiple key components;
-1. A Power BI solution Template.
-2. A set of PowerPoint design templates and icons.
+* A Power BI solution Template.
+* A set of PowerPoint design templates and icons.
 
 The most simple usage of this Power BI template consists of opening it and analyzing your Printix data in PowerBI
 Desktop on your own machine.
@@ -16,9 +16,9 @@ A demo of the Printix solution template can be viewed [here](https://app.powerbi
 
 # Getting started
 To start using the Printix Power BI solution, follow the steps described in the Printix Administrator Manual:
-1. Enable Printix Analytics ([https://manuals.printix.net/administrator/topic/how-to-setup-analytics])
-2. Set up report in Power BI Desktop ([https://manuals.printix.net/administrator/topic/how-to-setup-power-bi])
-3. (Optional) Publish the report to Power BI Online Service ([https://manuals.printix.net/administrator/topic/how-to-publish-to-power-bi-on-the-web])
+1. [Setup Printix Analytics](https://manuals.printix.net/administrator/topic/how-to-setup-analytics)
+2. [Setup Power BI](https://manuals.printix.net/administrator/topic/how-to-setup-power-bi)
+3. (Optional) [Publish the report to Power BI Online Service](https://manuals.printix.net/administrator/topic/how-to-publish-to-power-bi-on-the-web)
 
 Read more about what you can find in the report [here](https://manuals.printix.net/administrator/topic/how-to-interact-with-power-bi-report).
 
