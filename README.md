@@ -23,7 +23,7 @@ To start using the Printix Power BI solution, follow the steps described in the 
 Read more about what you can find in the report [here](https://manuals.printix.net/administrator/topic/how-to-interact-with-power-bi-report).
 
 # Editing the Power BI template
-You can freely alter the Power BI templates as needed for your organization. If you create something awesome, we hope you will share it back with the community!
+You can freely alter the Power BI templates as needed for your organization. If you create something awesome, we hope you will share it back with the community! Please remember that the report is shared under the [GPL-3.0 license](https://github.com/printix/Power-BI/blob/master/LICENSE).
 
 ## Changing the Power BI design
 The Power BI design is created in PowerPoint and can easily be edited. You can find the design under the "PowerPoint" folder. The design is mostly built using Storyboards.
@@ -32,3 +32,8 @@ When you have altered the design in PowerPoint, and exported the slides as "PNGs
 The Images from PowerPoint is saved under the 'Images\PowerPoint' directory.
 
  ![AlterDateRanges](./Images/Documentation/PowerBI_Visualization.PNG)
+
+ ## Changing the Power BI Theme
+ The theme for the report is branded with the same style as [https://printix.net](https://printix.net). You can create your own report themes by following [Microsoft's official guide](https://docs.microsoft.com/en-us/power-bi/desktop-report-themes).
+
+ The included theme is a great start for a customized template and is found under the themes folder. 

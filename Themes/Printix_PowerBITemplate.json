@@ -1,0 +1,191 @@
+{
+	"name": "Printix",
+	"dataColors": [
+				"#459EEC", "#333333", "#64f3c4", "#2FD189","#DFF1F6", "#e6e6e6", "#f3f9fa", "#0000EE", "#9E9EA6"
+				],
+	"visualStyles": {
+	
+		"basicShape": {
+			"*": {
+				"line": [{
+					"lineColor": { "solid": { "color": "#333333"}},
+					"transparency": 0,
+					"weight": 3,
+					"roundEdge": 0,
+					"fontFamily": "Helvetica"
+				}],
+				"fill": [{
+					"show": true,
+					"fillColor": { "solid": { "color": "#333333"}},
+					"transparency": 0
+				}],
+				"rotation": [{
+					"angle": 0
+				}],
+				"visualHeader": [{
+					"show": false
+				}]
+			}
+		},
+		"textbox": {
+			"*": {
+				"background": [{
+					"show": false,
+					"color": { "solid": { "color": "#DDDDDD"}},
+					"transparency": 0
+				}],
+				"visualHeader": [{
+					"show": true
+				}]
+			}
+		},
+		"pieChart": {
+			"*": {
+				"legend": [{
+					"show": true,
+					"position": "Top",
+					"showTitle": true,
+					"titleText": "",
+					"legendColor": { "solid": { "color": "#3f4b56"}},
+					"fontFamily": "Helvetica",
+					"fontSize": 10
+				}],
+				"labels": [{
+					"show": true,
+					"labelStyle": "Category, data value, percent of total",
+					"color": { "solid": { "color": "#333333"}},
+					"labelDisplayUnits": "0",
+					"labelPrecision": 0,
+					"fontSize": 10,
+					"fontFamily": "Helvetica",
+					"position": "Outside"
+				}]
+				
+			}
+		},
+		"tableEx": {
+			"*": {
+				"grid": [{
+					"gridVertical": false,
+					"gridVerticalColor": { "solid": { "color": "#333333"}},
+					"gridVerticalWeight": 2,
+					"gridHorizontal": false,
+					"gridHorizontalColor": { "solid": { "color": "#333333"}},
+					"gridHorizontalWeight": 2,
+					"rowPadding": 2,
+					"outlineColor": { "solid": { "color": "#333333"}},
+					"outlineWeight": 1,
+					"textSize": 10,
+					"imageHeight": 100
+				}],
+				"columnHeaders": [{
+					"fontColor": { "solid": { "color": "#3f4b56"}},
+					"backColor": { "solid": { "color": "#ffffff"}},
+					"outline": "BottomOnly",
+					"autoSizeColumnWidth": true,
+					"fontFamily": "Helvetica",
+					"fontSize": 10,
+					"alignment": "Left",
+					"wordWrap": true
+				}],
+				"values": [{
+					"fontColorPrimary": { "solid": { "color": "#333333"}},
+					"backColorPrimary": { "solid": { "color": "#dbdbdb"}},
+					"fontColorSecondary": { "solid": { "color": "#333333"}},
+					"backColorSecondary": { "solid": { "color": "#ffffff"}},
+					"outline": "None",
+					"urlIcon": true,
+					"wordWrap": true,
+					"fontFamily": "Helvetica",
+					"fontSize": 8
+				}],
+				"total": [{
+					"totals": true,
+					"fontColor": { "solid": { "color": "#3f4b56"}},
+					"backColor": { "solid": { "color": "#ffffff"}},
+					"outline": "TopOnly",
+					"fontFamily": "Helvetica",
+					"fontSize": 10
+				}]
+			}
+		},
+		"card": {
+			"*": {
+				"labels": [{
+					"color": { "solid": { "color": "#459EEC"}},
+					"labelDisplayUnits": "0",
+					"labelPrecision": 0,
+					"fontSize": 16,
+					"fontFamily": "Helvetica"
+				}],
+				"categoryLabels": [{
+					"show": true,
+					"color": { "solid": { "color": "#3f4b56"}},
+					"fontSize": 10,
+					"fontFamily": "Helvetica"
+				}],
+				"wordWrap": [{
+					"show": true
+				}],
+				"background": [{
+						"show": false,
+						"transparency": 100
+					}
+				],
+				  "title": [{
+				    "show": true,
+				    "fontColor": { "solid": { "color": "#3f4b56" } },
+				    "background": [{
+						"show": false
+					}],
+				    "alignment": "left",
+				    "fontSize": 11,
+				    "fontFamily": "Helvetica"
+				  }],
+				  "border": [{
+				    "show": false,
+				    "color": { "solid": { "color": "#062b60"}}
+				  }]
+			}
+		},
+        "*": {
+            "*": {
+                "title": [{
+                    "show": true,
+                    "fontColor": { "solid": { "color": "#3f4b56" } },
+                    "background": { "solid": { "color": "#ffff" } },
+                    "alignment": "center",
+                    "fontSize": 12,
+                    "fontFamily": "Helvetica"
+                }],
+                "background": [{
+                    "show": false
+                }],
+                "lockAspect": [{
+                    "show": true
+                }],
+                "border": [{
+                    "show": false
+                }],
+                "visualTooltip": [{
+                    "type": "Default"
+                }],
+                "stylePreset": [{
+                    "name": "None"
+                }]
+            }
+        },
+        "page": {
+            "*": {
+                "background": [{
+                    "color": { "solid": { "color": "#fff" } },
+                    "transparency": 0
+                }],
+                "outspace": [{
+                    "color": { "solid": { "color": "#fff" } },
+                    "transparency": 0
+                }]
+            }
+        }
+    }
+}
