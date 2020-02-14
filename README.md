@@ -22,6 +22,64 @@ To start using the Printix Power BI solution, follow the steps described in the 
 
 Read more about what you can find in the report [here](https://manuals.printix.net/administrator/topic/how-to-interact-with-power-bi-report).
 
+**Note:** When you change the "Display Currency" parameter, you will have to manually refresh the whole report. Just clicking "apply" in the report is not enough.
+
+# How the cost calculation is done
+It's impossible to actually calculate the total cost of printer environment, as there is loads of variables that's not tracked by Printix, such as direct print. But, we can try to calculate cost based on what's being printed through Printix.
+
+To allow anyone to define their own cost for different variables you must provide some input the first time you set up the report:
+- Sheet cost
+  - Cost per sheet printed
+- Toner cost BW
+  - Cost per page, printed in black and white
+- Toner cost Color
+  - Cost per page, printed with colors
+- Display Currency
+  - Which currency would you like to display for all cost related columns.
+
+From there, it's quite simple;
+Based on actually printed jobs (Jobs table) we calculate the cost the following way:
+- Sheet cost
+  -   This takes into consideration if the job is duplex or not, and multiples the sum of pages with the cost per sheet.
+
+  Code:
+  ``   SWITCH(
+TRUE ();
+jobs[duplex] = TRUE(); ROUNDUP(jobs[page_count] / 2;0 )  * sum('Cost Per Sheet'[Cost Per Sheet]);
+jobs[duplex] = FALSE(); (jobs[page_count]  * SUM('Cost Per Sheet'[Cost Per Sheet])
+) + 0)`` 
+
+- Cost per page, printed in black and white
+  - If the job is printed in black and white, it will multiple the number of pages with the toner cost BW
+
+    Code: 
+``    SWITCH(
+TRUE ();
+jobs[color] = TRUE(); 0 ;
+jobs[color] = FALSE(); (jobs[page_count]  * SUM('Cost Per Mono Sheet'[Cost Per Mono Sheet])
+) + 0)``
+
+- Cost per page, printed in color
+  - If the job is printed in color, it will multiple the number of pages with the toner cost color
+
+    Code: 
+``    SWITCH(
+TRUE ();
+jobs[color] = TRUE(); 0 ;
+jobs[color] = FALSE(); (jobs[page_count]  * SUM('Cost Per Mono Sheet'[Cost Per Mono Sheet])
+) + 0)``
+
+- Total cost
+  - Sums all of the previously mentioned calculations to display the total cost per job.
+
+    Code: ``Total_Cost = jobs[Sheet_Cost] + jobs[Toner_Cost_BW] + jobs[Toner_Cost_Color]``
+
+For all 4 of these calculations, there is another column with the same name but with " (Currency formatted)" appended to it. These columns look's at the formatting of the selected display currency and make's the sum much more user friendly. It's these columns that's used for all the graphics.
+
+**Note**; Merging the calculation and the formatting into a single measure has turned out to cause severe performance issues with larger datasets and should be avoided. 
+
+
+
 # Editing the Power BI template
 You can freely alter the Power BI templates as needed for your organization. If you create something awesome, we hope you will share it back with the community! Please remember that the report is shared under the [GPL-3.0 license](https://github.com/printix/Power-BI/blob/master/LICENSE).
 
