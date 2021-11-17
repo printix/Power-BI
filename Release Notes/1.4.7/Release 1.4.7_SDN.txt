@@ -1,0 +1,18 @@
+Release 1.4.7 (SDN)
+
+Added two new reports to reflect Home Office Printing
+
+When Home Office Printing is enabled, Printix Client will automatically include "@home" in all network, printer, printer queue and computer names.
+The added two reports use this criteria to filter out home office print usage from printing in coprorate sites.
+
+Report "Job - History" is now filtered to exclude any print jobs containing "@home" in the network name.
+Report "Job - History Home Office" is now filtered to only show print jobs containing "@home" in the network name.
+
+Report "Cost" is now filtered to exclude any print jobs containing "@home" in the network name.
+Report "Cost Home Office" is now filtered to only show print jobs containing "@home" in the network name.
+
+Two new background images have been created in the PowerPoint template and also saved as images.
+
+
+
+
