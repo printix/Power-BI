@@ -1,0 +1,90 @@
+Release 1.5
+
+Added line to Disclaimer: "Due to different driver architectures it cannot be guaranteed that this report will show all pages printed."
+
+Fixed typos and other cosmetics like font sizes, layout and positioning on various pages.
+
+Removed page specific filtering on "print_job_status" and made it a global filter. The global filter now only filters on "job_state" =  "PRINT_OK and PRINT_OK_SENT_TO_QUEUE"
+
+
+"Printers - Overview"
+
+Removed "Active Users" in Models List
+
+
+
+"Printer Histroy 2" 
+
+Removed
+
+
+"Queues - Overview" 
+
+Removed
+
+
+
+"Job - History"
+
+Added selection dialogue "Home Office Printing" with Yes/No tick boxes.
+The report can now be filtered to show home office based printing when the home office printing feature is used.
+Changed the column heads for "Color print" and "Duplex Print" to "BW/Color" and "Simplex/Duplex"
+Changed wording in "BW/Color" and "Simplex/Duplex" from True/False/ to BW/Color Simplex/Duplex"
+Added replacement text for document name if "include document name in data extract" is not enabled in Printix Adminsitrator
+Added search function by document name (will only work if "include document name in data extract" is activated in Printix Administrator -> Analytics)
+Added filter function by Mono/Color
+Removed "Job State" as the global filter will only show "PRINT_OK"
+
+
+
+"User - Print Details" pages
+
+Removed "Secure Print" and "Job States" pie charts from .
+Renames "Printed 2-sided" to "Simplex/Duplex" and "Printed in Black" To Color/BW" on "Printer Histroy 2" and "User - Print Details" pages.
+Changed Powerpoint template file accordingly to reflect above changes. Exported image files accordingly.
+
+
+"Queues - Overview"
+
+Removed "autoupdate" serach filter
+Renamed "Auto Install" to "Add automatically"
+
+
+"Locations - Overview"
+
+Changed wording and labels on pie charts
+Added filter with search field for "Networks"
+
+"Users - Overview"
+Removed
+
+
+"User - Print Details"
+
+Changed wording for Simplex/Duplex and BW/Color
+Several modifications to the vizual formating of the pie charts (Simplex/Duplex  BW/Color Paper Size and Driver Type)
+Changed page count from "Sum" to "Count" on pie charts "Simplex/Duplex & Color/BW.
+
+
+"Cost"
+
+Added filter for home office prining.
+
+
+Modified legends and data lables on various charts.
+
+Removed "Job - History Home Office" and "Cost Home Office" reports which are obsolete due to the home office filter.
+
+
+"Service Desk"
+
+Newly added
+This report can be shared solo so any service desk employee can esily serach and find any printer through different categories.
+Searchable values: Printer Name, Network, Serial Number, Printix Printer ID and Queue Name, User Name.
+Returns: Name, Print Queue Name, Serial Number, IP Address, Network.
+The report contains a column called "Printer Link". When clicked you will be forwarded to the webinterface of the device accordingly. For this you must have IP connectivity between your computer and the printer!
+
+#E5F4FD
+
+
+
