@@ -12,13 +12,14 @@ Further, you can decide to publish it to your organization's online Power BI ser
 other users (or even guests), embed visuals into your application, etc.
 
 ## Demo
-A demo of the Printix solution template can be viewed [here](https://app.powerbi.com/view?r=eyJrIjoiNDRkYzNlOTMtMzcwZC00ODY4LWE5MGQtMzJlMWU2MDk5M2NmIiwidCI6IjNlYWFmMWQzLTZmOWUtNDBmZC1iN2U5LTYwYjQ1ZTU1ZTEyNSIsImMiOjh9).
+A demo of the Printix solution template can be viewed [here](https://app.powerbi.com/view?r=eyJrIjoiOTUyMDRlOTktODlmNS00YTk2LTgzMTEtNzQ4ZmMyY2E2NGY4IiwidCI6IjJlNWQ4OWQxLTBiOTgtNDVkOC1iNzBmLWM3OWRiMTBmZWI1NCIsImMiOjh9).
 
 # Getting started
 To start using the Printix Power BI solution, follow the steps described in the Printix Administrator Manual:
 1. [Setup Printix Analytics](https://manuals.printix.net/administrator/topic/how-to-setup-analytics)
 2. [Setup Power BI](https://manuals.printix.net/administrator/topic/how-to-setup-power-bi)
 3. (Optional) [Publish the report to Power BI Service](https://manuals.printix.net/administrator/topic/how-to-publish-to-power-bi-on-the-web)
+   (To publish the Power BI report, you will need a Power BI Pro license.)
 
 Read more about what you can find in the report [here](https://manuals.printix.net/administrator/topic/how-to-interact-with-power-bi-report).
 
@@ -28,14 +29,16 @@ Read more about what you can find in the report [here](https://manuals.printix.n
 It's impossible to actually calculate the total cost of printer environment, as there is loads of variables that's not tracked by Printix, such as direct print. But, we can try to calculate cost based on what's being printed through Printix.
 
 To allow anyone to define their own cost for different variables you must provide some input the first time you set up the report:
-- Sheet cost
-  - Cost per sheet printed
-- Toner cost BW
+- Sheets Per Tree
+  - The number of sheets created from a single tree
+- Cost Per Mono Sheet
   - Cost per page, printed in black and white
-- Toner cost Color
+- Cost Per Color Sheet
   - Cost per page, printed with colors
+- Cost Per Sheet
+  - Cost per sheet printed
 - Display Currency
-  - Which currency would you like to display for all cost related columns.
+  - Which currency would you like to display for all cost related columns
 
 From there, it's quite simple;
 Based on actually printed jobs (Jobs table) we calculate the cost the following way:
@@ -95,3 +98,26 @@ The Images from PowerPoint is saved under the 'Images\PowerPoint' directory.
  The theme for the report is branded with the same style as [https://printix.net](https://printix.net). You can create your own report themes by following [Microsoft's official guide](https://docs.microsoft.com/en-us/power-bi/desktop-report-themes).
 
  The included theme is a great start for a customized template and is found under the themes folder. 
+ 
+ 
+ 
+ 
+ 
+# Techincal details
+ 
+## Static tables
+There are some tables that are filled with static data and they are not coming from an outside source. For example: Currency_List, ReleaseInformation, etc.
+
+The content of these static tables are Base64 encoded and compressed as a string. To change the content of these tables, you have to modify this string in the **Power Query Editor** view in the "Source" step in **Applied Steps** list.
+
+To decode and encode this string you can use an online converter like:
+https://jgraph.github.io/drawio-tools/tools/convert.html
+
+Set "URL Encode" to disabled. Set "Deflate" and "Base64" checkboxes to enabled.
+
+Use the Encode and Decode buttons.
+
+## Saving the template
+Before saving the template for commiting, ensure that:
+- the demo SQL server and database are set (printix-bi-data-2.database.windows.net; printix_bi_data_2_1)
+- the Date filter (in the right upper corner of the reports) is set to the widest interval as possible (no date limit)
