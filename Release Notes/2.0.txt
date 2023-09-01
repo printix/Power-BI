@@ -1,0 +1,16 @@
+Release v2.0
+
+New functionality:
+  Report 'Job - History': It was extended with scan jobs, and a new filter for job types.
+  Report 'User - Scan Details': It was newly created for the scan jobs.
+
+Fixed issues:
+  Report 'Locations - Overview': Chart 'Printed In Black' displayed the color and monochrome pages swapped.
+  Report 'Locations - Overview': Many texts were fixed (made them more correct and understandable).
+  Report 'Printer - History': Chart 'Jobs' displayed more jobs (usually twice) as were really printed.
+  Report 'User - Print Details': Charts 'Color/BW' and 'Simplex/Duplex' showed the number of jobs instead of pages.
+  Report 'User - Print Details': Charts 'Color/BW' and 'Simplex/Duplex' were improved by displaying its used units (pages, sheets).
+  Report 'User - Print Details': Chart 'Total Sheets' was renamed to 'Total Pages' and its label was corrected to 'Date'.
+  Report 'Tree-O-Meter': List 'Users' showed page count (instead of sheets) in column '# of Sheets'.
+  Report 'Tree-O-Meter': List 'Printers' showed a global printer history value (instead of only Printix related) for column '# of Sheets'.
+  Report 'Tree-O-Meter': Explanation texts were changed to more straightforward.

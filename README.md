@@ -84,7 +84,7 @@ For all 4 of these calculations, there is another column with the same name but 
 
 
 # Editing the Power BI template
-You can freely alter the Power BI templates as needed for your organization. If you create something awesome, we hope you will share it back with the community! Please remember that the report is shared under the [GPL-3.0 license](https://github.com/printix/Power-BI/blob/master/LICENSE).
+You can freely alter the Power BI template as needed for your organization. If you create something awesome, we hope you will share it back with the community! Please remember that the report is shared under the [GPL-3.0 license](https://github.com/printix/Power-BI/blob/master/LICENSE).
 
 ## Changing the Power BI design
 The Power BI design is created in PowerPoint and can easily be edited. You can find the design under the "PowerPoint" folder. The design is mostly built using Storyboards.
@@ -119,5 +119,5 @@ Use the Encode and Decode buttons.
 
 ## Saving the template
 Before saving the template for commiting, ensure that:
-- the demo SQL server and database are set (printix-bi-data-2.database.windows.net; printix_bi_data_2_1)
-- the Date filter (in the right upper corner of the reports) is set to the widest interval as possible (no date limit)
+- The demo SQL server and database are set (printix-bi-data-2.database.windows.net; printix_bi_data_2_1)
+- The Date filter (in the right upper corner of the reports) is set to the widest interval as possible (no date limit)

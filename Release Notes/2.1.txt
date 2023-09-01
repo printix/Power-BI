@@ -1,0 +1,4 @@
+Release v2.1
+
+Fixed issue:
+  Report 'Job - History': Scan document names were missing.
