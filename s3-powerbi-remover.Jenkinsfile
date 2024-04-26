@@ -24,6 +24,9 @@ pipeline {
                 AWS_DEFAULT_REGION = "eu-west-1"
             }
             steps {
+                buildDescription("""
+                      printix-${params.TEMPLATE_VERSION}.pbit
+                """)
                 withTools('TOOL_AWS_CLI') {
                     sh """
                         aws s3 rm s3://printix-software/powerbi/${params.TEMPLATE_VERSION}/printix-${params.TEMPLATE_VERSION}.pbit
