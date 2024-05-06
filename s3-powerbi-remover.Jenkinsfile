@@ -29,7 +29,7 @@ pipeline {
                 """)
                 withTools('TOOL_AWS_CLI') {
                     sh """
-                        aws s3 rm s3://printix-software/powerbi/${params.TEMPLATE_VERSION}/printix-${params.TEMPLATE_VERSION}.pbit
+                        aws s3 rm s3://printix-software/template/powerbi/${params.TEMPLATE_VERSION}/printix-${params.TEMPLATE_VERSION}.pbit
                     """
                 }
             }
