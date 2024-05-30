@@ -7,11 +7,7 @@ pipeline {
             label 'built-in'
         }
     }
-
-    parameters {
-        string(name: 'TEMPLATE_VERSION', defaultValue: '', description: 'Template version')
-    }
-    
+  
     options {
         disableConcurrentBuilds()
     }
@@ -28,34 +24,14 @@ pipeline {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
                 AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
                 AWS_DEFAULT_REGION = "eu-west-1"
-                ROOT = "custompack"                
                 ZIP_FILE_NAME="PowerBITemplateCustomizationPack.zip"
             }
             steps {
                 buildDescription("""
                       Power BI template customization pack
                 """)
-                
-                fileOperations([
-                    fileCopyOperation(
-                        includes: "Fonts",
-                        targetLocation: env.ROOT,
-                        flattenFiles: false),
-                    fileCopyOperation(
-                        includes: "Images",
-                        targetLocation: env.ROOT,
-                        flattenFiles: false),
-                    fileCopyOperation(
-                        includes: "PowerPoint",
-                        targetLocation: env.ROOT,
-                        flattenFiles: false),
-                    fileCopyOperation(
-                        includes: "Themes",
-                        targetLocation: env.ROOT,
-                        flattenFiles: false),
-                ])
-                
-                zip(dir: ".", glob: "**/${ROOT}/*", zipFile: env.ZIP_FILE_NAME)
+
+                zip(dir: ".", glob: "Fonts/**/*.*, Images/**/*.*, PowerPoint/**/*.*, Themes/**/*.*", zipFile: env.ZIP_FILE_NAME, overwrite: true)
                 
                 withTools('TOOL_AWS_CLI') {
                     sh """                                
