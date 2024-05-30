@@ -28,16 +28,37 @@ pipeline {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
                 AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
                 AWS_DEFAULT_REGION = "eu-west-1"
-                DIRECTORIES_AND_FILES="Fonts Images PowerPoint Themes"
+                ROOT = "custompack"                
                 ZIP_FILE_NAME="PowerBITemplateCustomizationPack.zip"
             }
             steps {
                 buildDescription("""
                       Power BI template customization pack
                 """)
+                
+                fileOperations([
+                    fileCopyOperation(
+                        includes: "Fonts",
+                        targetLocation: env.ROOT,
+                        flattenFiles: false),
+                    fileCopyOperation(
+                        includes: "Images",
+                        targetLocation: env.ROOT,
+                        flattenFiles: false),
+                    fileCopyOperation(
+                        includes: "PowerPoint",
+                        targetLocation: env.ROOT,
+                        flattenFiles: false),
+                    fileCopyOperation(
+                        includes: "Themes",
+                        targetLocation: env.ROOT,
+                        flattenFiles: false),
+                ])
+                
+                zip(dir: ".", glob: "**/${ROOT}/*", zipFile: env.ZIP_FILE_NAME)
+                
                 withTools('TOOL_AWS_CLI') {
-                    sh """                        
-                        zip -r $ZIP_FILE_NAME $DIRECTORIES_AND_FILES
+                    sh """                                
                         aws s3 cp $ZIP_FILE_NAME s3://printix-software/template/powerbi/custompack/$ZIP_FILE_NAME
                     """
                 }
